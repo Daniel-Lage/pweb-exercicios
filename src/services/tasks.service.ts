@@ -1,23 +1,16 @@
+import type { TaskPayload } from "../models/tasks.model.js";
+import type { TasksRepository } from "../repositories/tasks.repository.js";
 import { AppError } from "../utils/AppError.js";
 
-type TaskObject = {
-  id: number;
-} & TaskPayload;
-
-type TaskPayload = {
-  title: string;
-  completed: boolean;
-};
-
-const tasks: TaskObject[] = [];
-
 export class TasksService {
+  constructor(private tasksRepository: TasksRepository) {}
+
   async listTasks() {
-    return tasks;
+    return this.tasksRepository.listTasks();
   }
 
   async findTaskById(id: number) {
-    const task = tasks.find((task) => task.id === id);
+    const task = this.tasksRepository.findTaskById(id);
 
     if (!task) {
       throw new AppError("Task not found", 404);
@@ -27,44 +20,16 @@ export class TasksService {
   }
 
   async createTask(payload: TaskPayload) {
-    const newTask = { id: tasks.length, ...payload };
-
-    tasks.push(newTask);
-
-    return newTask as TaskObject;
+    return await this.tasksRepository.createTask(payload);
   }
 
   async updateTask(id: number, changes: Partial<TaskPayload>) {
-    const index = tasks.findIndex((task) => task.id === id);
-
-    if (index === -1) {
-      throw new AppError("Task not found", 404);
-    }
-    const task = tasks[index]!;
-
-    const definedChanges = Object.fromEntries(
-      Object.entries(changes).filter(([_, value]) => value !== undefined),
-    ) as Partial<TaskPayload>;
-
-    const newTask = {
-      ...task,
-      ...definedChanges,
-    };
-
-    tasks[index] = newTask;
-
-    return newTask;
+    await this.findTaskById(id);
+    return this.tasksRepository.updateTask(id, changes);
   }
 
   async deleteTask(id: number) {
-    const index = tasks.findIndex((task) => task.id === id);
-
-    if (index === -1) {
-      throw new AppError("Task not found", 404);
-    }
-
-    tasks.splice(index, 1);
-
-    return true;
+    await this.findTaskById(id);
+    return await this.tasksRepository.deleteTask(id);
   }
 }
