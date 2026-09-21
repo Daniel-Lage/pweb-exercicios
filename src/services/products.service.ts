@@ -6,11 +6,11 @@ export class ProductsService {
   constructor(private productsRepository: ProductsRepository) {}
 
   async listProducts() {
-    return this.productsRepository.listProducts();
+    return await this.productsRepository.listProducts();
   }
 
   async findProductById(id: number) {
-    const product = this.productsRepository.findProductById(id);
+    const product = await this.productsRepository.findProductById(id);
 
     if (!product) {
       throw new AppError("Product not found", 404);
@@ -37,7 +37,7 @@ export class ProductsService {
 
   async updateProduct(id: number, changes: Partial<ProductPayload>) {
     await this.findProductById(id);
-    return this.productsRepository.updateProduct(id, changes);
+    return await this.productsRepository.updateProduct(id, changes);
   }
 
   async deleteProduct(id: number) {

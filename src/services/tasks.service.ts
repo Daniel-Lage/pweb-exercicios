@@ -6,11 +6,11 @@ export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
   async listTasks() {
-    return this.tasksRepository.listTasks();
+    return await this.tasksRepository.listTasks();
   }
 
   async findTaskById(id: number) {
-    const task = this.tasksRepository.findTaskById(id);
+    const task = await this.tasksRepository.findTaskById(id);
 
     if (!task) {
       throw new AppError("Task not found", 404);
@@ -25,7 +25,7 @@ export class TasksService {
 
   async updateTask(id: number, changes: Partial<TaskPayload>) {
     await this.findTaskById(id);
-    return this.tasksRepository.updateTask(id, changes);
+    return await this.tasksRepository.updateTask(id, changes);
   }
 
   async deleteTask(id: number) {

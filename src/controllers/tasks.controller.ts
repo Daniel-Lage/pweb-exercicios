@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { TasksService } from "../services/tasks.service.js";
+import type { TasksService } from "../services/tasks.service.js";
 import { AppError } from "../utils/AppError.js";
 
 export class TasksController {

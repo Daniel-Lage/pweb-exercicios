@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ProductsService } from "../services/products.service.js";
+import type { ProductsService } from "../services/products.service.js";
 import { AppError } from "../utils/AppError.js";
 
 export class ProductsController {
